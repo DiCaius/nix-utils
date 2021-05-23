@@ -1,0 +1,63 @@
+branches: ['main']
+plugins:
+  - - '@semantic-release/changelog'
+    - changelogFile: 'CHANGELOG.md'
+  - - '@semantic-release/commit-analyzer'
+    - preset: 'angular'
+      releaseRules:
+        - release: false
+          type: 'no-release'
+        - release: false
+          type: 'release'
+        - release: false
+          type: 'wip'
+        - release: 'patch'
+          type: 'build'
+        - release: 'patch'
+          type: 'chore'
+        - release: 'patch'
+          type: 'ci'
+        - release: 'patch'
+          type: 'docs'
+        - release: 'patch'
+          type: 'test'
+  - - '@semantic-release/exec'
+    - prepareCmd: 'sed -i -E "s/version: [0-9]+\.[0-9]+\.[0-9]+(\..+)?/version: ${nextRelease.version}/" README.md'
+  - - '@semantic-release/git'
+    - assets:
+        - 'CHANGELOG.md'
+        - 'README.md'
+        - 'flake.lock'
+      message: 'release(${nextRelease.version}): [skip ci].\n\n${nextRelease.notes}'
+  - - '@semantic-release/release-notes-generator'
+    - preset: 'conventionalcommits'
+      presetConfig:
+        types:
+          - hidden: false
+            section: ':hammer: BUILD'
+            type: 'build'
+          - hidden: false
+            section: ':water_buffalo: CHORE'
+            type: 'chore'
+          - hidden: false
+            section: ':books: DOCUMENTATION'
+            type: 'docs'
+          - hidden: false
+            section: ':sparkles: FEATURE'
+            type: 'feat'
+          - hidden: false
+            section: ':bug: FIX'
+            type: 'fix'
+          - hidden: false
+            section: ':zap: PERFORMANCE'
+            type: 'perf'
+          - hidden: false
+            section: ':wrench: REFACTOR'
+            type: 'refactor'
+          - hidden: false
+            section: ':barber: STYLE'
+            type: 'style'
+          - hidden: false
+            section: ':dart: TEST'
+            type: 'test'
+
