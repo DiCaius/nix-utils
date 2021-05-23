@@ -1,4 +1,4 @@
-# nix-utils -> version: 0.0.0 | nixpkgs(20.09)
+# nix-utils -> version: 1.0.0 | nixpkgs(20.09)
 Flake-based library with Nix utilities.
 
 ## Usage
