@@ -1,0 +1,77 @@
+name: Pull Request
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: GitHub Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Cache
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: flake.lock
+          key: ${{ runner.os }}-${{ hashFiles('**/*.nix') }}
+      - name: Install Nix
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: cachix/install-nix-action@v13
+        with:
+          install_options: '--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve'
+          install_url: https://nixos-nix-install-tests.cachix.org/serve/lb41az54kzk6j12p81br4bczary7m145/install
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+      - name: Build
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          nix flake check
+  commitlint:
+    name: Check CommitLint Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - name: GitHub Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: CommitLint
+        uses: wagoid/commitlint-github-action@v3
+        with:
+          configFile: .commitlintrc.yml
+  editorconfig:
+    name: Check EditorConfig Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - name: GitHub Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: ECLint
+        uses: snow-actions/eclint@v1.0.1
+        with:
+          args: 'check'
+  lint:
+    name: Lint Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: GitHub Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Install Nix
+        uses: cachix/install-nix-action@v13
+        with:
+          install_options: '--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve'
+          install_url: https://nixos-nix-install-tests.cachix.org/serve/lb41az54kzk6j12p81br4bczary7m145/install
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+      - name: Run `nix-linter`
+        run: |
+          nix-shell -p nix-linter --run "nix-linter -r ."
+
