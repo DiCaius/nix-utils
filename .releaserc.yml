@@ -37,6 +37,9 @@ plugins:
             section: ':hammer: BUILD'
             type: 'build'
           - hidden: false
+            section: ':vertical_traffic_light: CONTINUOUS INTEGRATION'
+            type: 'ci'
+          - hidden: false
             section: ':water_buffalo: CHORE'
             type: 'chore'
           - hidden: false
