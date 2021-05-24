@@ -1,3 +1,10 @@
+### [1.0.3](https://github.com/DiCaius/nix-utils/compare/v1.0.2...v1.0.3) (2021-05-24)
+
+
+### :water_buffalo: CHORE
+
+* **gitignore:** Clean up. ([15fc206](https://github.com/DiCaius/nix-utils/commit/15fc20625ce3557fbc2ca27f1c5b6e8226b8294b))
+
 ### [1.0.2](https://github.com/DiCaius/nix-utils/compare/v1.0.1...v1.0.2) (2021-05-24)
 
 
